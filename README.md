@@ -152,3 +152,34 @@ pacman -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+## Install Nvidia
+
+- Current driver: `nouveau`
+- [Nvidia](https://wiki.archlinux.org/title/NVIDIA)
+- [CodeNames](https://nouveau.freedesktop.org/CodeNames.html)
+- [OpenRGB](https://archlinux.org/packages/extra/x86_64/openrgb/)
+
+```bash
+# peek in pci
+lspci -k -d ::03xx
+
+# for 3060 (NV170 - Ampere)
+sudo pacman -S nvidia
+```
+
+## Install Desktop Manager
+
+- [Destop Environments](https://wiki.archlinux.org/title/Desktop_environment)
+- [SSDM](https://wiki.archlinux.org/title/SDDM)
+- [KDE](https://wiki.archlinux.org/title/KDE)
+
+```bash
+sudo pacman -S plasma-desktop kde-applications sddm
+```
+
+## Install YAY (AUR Helper)
+
+```bash
+https://github.com/Jguer/yay
+```
