@@ -181,5 +181,24 @@ sudo pacman -S plasma-desktop kde-applications sddm
 ## Install YAY (AUR Helper)
 
 ```bash
-https://github.com/Jguer/yay
+# https://github.com/Jguer/yay
+```
+
+## Hidraw
+
+```bash
+# on
+sudo chmod a+rw /dev/hidraw*
+
+# off
+sudo chmod 0600 /dev/hidraw*
+```
+
+## VMWare
+
+```bash
+yay -S vmware-workstation vmware-keymaps linux-headers --noconfirm
+
+# disable secure boot
+sudo modprobe -a vmw_vmci vmmon
 ```
