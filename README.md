@@ -14,6 +14,15 @@ iwctl
 # > station wlan0 connect <SSID>
 ```
 
+## Update pacman
+
+```bash
+pacman -Sy
+
+# Update keys for old live installation
+pacman -Sy archlinux-keyring
+```
+
 ## Setup Raid 0 with mdadm
 
 - Follow this [guide](https://wiki.archlinux.org/title/RAID)
@@ -39,37 +48,37 @@ mkfs.ext4 /dev/md0
 
 ```mermaid
 graph TB
-    subgraph "Logical Volume Layer"
-        LV1[ROOTFS<br/>2TB]
-    end
+subgraph "Logical Volume Layer"
+LV1[ROOTFS<br/>2TB]
+end
 
-    subgraph "Volume Group Layer"
-        VG1[VG_RAID0<br/>2TB Total<br/>Available: 2TB]
-    end
+subgraph "Volume Group Layer"
+VG1[VG_RAID0<br/>2TB Total<br/>Available: 2TB]
+end
 
-    subgraph "Physical Volume Layer"
-        PV1[PV1<br/>/dev/md0<br/>2TB]
-    end
+subgraph "Physical Volume Layer"
+PV1[PV1<br/>/dev/md0<br/>2TB]
+end
 
-    subgraph "Physical Storage Layer"
-        M_RAID0["MDADM (RAID 0)"<br/>/dev/md0<br/>2TB]
-    end
+subgraph "Physical Storage Layer"
+M_RAID0["MDADM (RAID 0)"<br/>/dev/md0<br/>2TB]
+end
 
-    %% Connections between layers
-    LV1 --> VG1
-    VG1 --> PV1
-    PV1 --> M_RAID0
+%% Connections between layers
+LV1 --> VG1
+VG1 --> PV1
+PV1 --> M_RAID0
 
-    %% Styling
-    classDef lvLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef vgLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef pvLayer fill:#fce4ec,stroke:#880e4f,stroke-width:2px
-    classDef diskLayer fill:#f5f5f5,stroke:#424242,stroke-width:2px
+%% Styling
+classDef lvLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+classDef vgLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
+classDef pvLayer fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+classDef diskLayer fill:#f5f5f5,stroke:#424242,stroke-width:2px
 
-    class LV1,LV2,LV3 lvLayer
-    class VG1 vgLayer
-    class PV1,PV2 pvLayer
-    class M_RAID0 diskLayer
+class LV1,LV2,LV3 lvLayer
+class VG1 vgLayer
+class PV1,PV2 pvLayer
+class M_RAID0 diskLayer
 ```
 
 ```bash
@@ -85,20 +94,34 @@ lvcreate -l 100%FREE -n rootfs /dev/vgraid0
 
 ```bash
 fdisk /dev/nvme2n1
-# > g
-# > n +1G (for bootloader)
-# > t uefi
-# > n +8G (for ram 64GB)
-# > t swap
-# > w (write)
+> g
+> n
+> +1G (for bootloader)
+> t uefi
+> n
+> +8G (for ram 64GB)
+> t
+> swap
+> w (write)
+```
+
+## Format partitions
+
+```bash
+# rootfs
+mkfs.ext4 /dev/vgraid0/rootfs
+
+# efi and swap
+mkfs.fat -F 32 /dev/efi_system_partition
+mkswap /dev/swap_partition
 ```
 
 ## Mount Partitions
 
 ```bash
-mount /dev/vgraid0
-mount --mkdir /dev/nvme2n1p1 /mnt/boot
-swapon /dev/nvme2n1p2
+mount /dev/vgraid0/rootfs /mnt
+mount --mkdir /dev/efi_system_partition /mnt/boot
+swapon /dev/swap_partition
 ```
 
 ## Install Base System
@@ -120,15 +143,26 @@ arch-chroot /mnt
 
 ```bash
 ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
+
+sudo nano /etc/locale.gen
+# Uncomment: en_US.UTF-8 UTF-8
 locale-gen
+
 cat <<EOF > /etc/locale.conf
 LANG=en_US.UTF-8
 EOF
+
 cat <<EOF /etc/hostname
 VM-PC
 EOF
-passwd
-useradd -m -G kk -s /usr/bin/fish
+
+passwd root
+
+useradd -mU kk -s /usr/bin/fish
+passwd kk
+
+# visudo NOPASSWD (TOO Risky, But Lazy)
+kk ALL=(ALL:ALL) NOPASSWD: ALL
 ```
 
 ## Set Initial Ram Disk
@@ -143,6 +177,31 @@ HOOKS=(... block mdadm_udev lvm2 filesystems ...)
 mkinitcpio -P
 ```
 
+## Install Pipewire (Sound)
+
+```bash
+pacman -S pipewire-jack pipewire pipewire-pulse
+```
+
+## Install Bluez (Bluetooth)
+
+```bash
+# pulseaudio-bluetooth (optional)
+pacman -S bluez bluez-utils bluedevil
+systemctl enable bluetooth.service
+```
+
+## Mount External Disks
+
+```bash
+lsblk -f
+
+# add into /etc/fstab
+# UUID=b8e4a1f6-6e8f-4f6e-8b6e-6e8f4f6e8b6e /mnt/partition ext4 defaults 0 0
+UUID=dda55b67-9c78-4798-bb29-beeb7da6f2f6 /mnt/BACKUP_8TB ext4 defaults 0 0
+UUID=b474193d-cd24-4258-b735-bea46c595733 /mnt/BACKUP_2TB ext4 defaults 0 0
+```
+
 ## Install Grub
 
 ```bash
@@ -151,6 +210,27 @@ pacman -S grub efibootmgr
 # https://wiki.archlinux.org/title/GRUB
 grub-install --target=x86_64-efi --efi-directory=/boot
 grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+## Install required tools
+
+```bash
+pacman -S man xclip tmux neovim tree ripgrep eza bat zoxide
+pacman -S go
+pacman -S otf-monaspace
+pacman -S diff-so-fancy luarocks yarn
+pacman -S torsocks
+
+yarn global add npm
+```
+
+## Install default software
+
+```bash
+yay -S visual-studio-code-bin obsidian
+yay -S vesktop-bin postman-bin
+yay -S claude-code claude-desktop-bin
+yay -S tor-browser-bin
 ```
 
 ## Install Nvidia
@@ -165,23 +245,41 @@ grub-mkconfig -o /boot/grub/grub.cfg
 lspci -k -d ::03xx
 
 # for 3060 (NV170 - Ampere)
-sudo pacman -S nvidia
+pacman -S nvidia-open
+```
+
+## Install Network Manager
+
+```bash
+# plasma-nm (Network Manager UI)
+pacman -S networkmanager plasma-nm
+
+systemctl enable NetworkManager
 ```
 
 ## Install Desktop Manager
 
-- [Destop Environments](https://wiki.archlinux.org/title/Desktop_environment)
+- [Desktop Environments](https://wiki.archlinux.org/title/Desktop_environment)
 - [SSDM](https://wiki.archlinux.org/title/SDDM)
 - [KDE](https://wiki.archlinux.org/title/KDE)
 
 ```bash
-sudo pacman -S plasma-desktop kde-applications sddm
+pacman -S plasma-desktop kde-applications sddm
+systemctl enable sddm
 ```
 
 ## Install YAY (AUR Helper)
 
 ```bash
 # https://github.com/Jguer/yay
+sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+```
+
+## Podman (Rootless)
+
+```bash
+pacman -So podman podman-compose podman-docker
+systemctl enable podman.service
 ```
 
 ## Hidraw
