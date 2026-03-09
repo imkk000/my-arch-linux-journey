@@ -1,6 +1,6 @@
 # For Future Me
 
-## Purpose
+## Why?
 
 - READ CAREFULLY [Installation Guide](https://wiki.archlinux.org/title/Installation_guide)
 - This is my first time installing Arch Linux. I want to learn new experiences and have a better understanding of the system.
@@ -11,7 +11,7 @@
 
 ```bash
 iwctl
-# > station wlan0 connect <SSID>
+> station wlan0 connect <SSID>
 ```
 
 ## Update pacman
@@ -219,7 +219,7 @@ pacman -S man xclip tmux neovim tree ripgrep eza bat zoxide
 pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
-pacman -S torsocks
+pacman -S torsocks ufw
 
 yarn global add npm
 ```
@@ -230,7 +230,15 @@ yarn global add npm
 yay -S visual-studio-code-bin obsidian
 yay -S vesktop-bin postman-bin
 yay -S claude-code claude-desktop-bin
+yay -S feishin-bin rssguard
+yay -S firefox google-chrome
+
+# tor onion
+gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org
 yay -S tor-browser-bin
+
+yay -S ollama
+systemctl enable ollama
 ```
 
 ## Install Nvidia
@@ -280,6 +288,20 @@ sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/ya
 ```bash
 pacman -So podman podman-compose podman-docker
 systemctl enable podman.service
+
+mkdir -p ~/.config/containers/systemd/
+systemctl --user daemon-reload
+```
+
+## UFW
+
+```bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw enable
+sudo ufw status verbose
+
+sudo ufw allow ssh
 ```
 
 ## Hidraw
