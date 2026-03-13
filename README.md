@@ -322,3 +322,17 @@ yay -S vmware-workstation vmware-keymaps linux-headers --noconfirm
 # disable secure boot
 sudo modprobe -a vmw_vmci vmmon
 ```
+
+## Install Anaconda
+
+```bash
+yay -S anaconda
+```
+
+## Install Dig
+
+- Bind is dns server package includes `dig` command
+
+```bash
+yay -S bind
+```
