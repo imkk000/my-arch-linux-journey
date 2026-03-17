@@ -220,6 +220,7 @@ pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
 pacman -S torsocks ufw
+pacman -S unrar unzip
 
 yarn global add npm
 ```
@@ -317,10 +318,14 @@ sudo chmod 0600 /dev/hidraw*
 ## VMWare
 
 ```bash
-yay -S vmware-workstation vmware-keymaps linux-headers --noconfirm
+yay -S uefitool-bin linux-headers
+yay -S vmware-workstation vmware-keymaps
 
 # disable secure boot
 sudo modprobe -a vmw_vmci vmmon
+
+# enable network service
+systemctl enable vmware-networks.service
 ```
 
 ## Install Anaconda
