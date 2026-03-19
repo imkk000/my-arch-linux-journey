@@ -23,6 +23,26 @@ pacman -Sy
 pacman -Sy archlinux-keyring
 ```
 
+## Setup btrfs (reduce mdadm+lvm2)
+
+```bash
+mkfs.btrfs -L raid0 -d single -m raid0 /dev/nvme0n1 /dev/nvme1n1
+
+# mount to create new subvolumes
+mount /dev/nvme0n1 /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+umount /mnt
+
+# mount subvolumes as directories
+mount -o subvol=@ /dev/sdb /mnt
+mount -o subvol=@home --mkdir /dev/sdb /mnt/home
+
+# list subvolumes
+btrfs subvolumes list -t /mnt
+
+```
+
 ## Setup Raid 0 with mdadm
 
 - Follow this [guide](https://wiki.archlinux.org/title/RAID)
@@ -221,6 +241,7 @@ pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
 pacman -S torsocks ufw
 pacman -S unrar unzip
+pacman -S rsync
 
 yarn global add npm
 ```
