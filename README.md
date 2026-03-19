@@ -35,77 +35,11 @@ btrfs subvolume create /mnt/@home
 umount /mnt
 
 # mount subvolumes as directories
-mount -o subvol=@ /dev/sdb /mnt
-mount -o subvol=@home --mkdir /dev/sdb /mnt/home
+mount -o subvol=@ /dev/nvme0n1 /mnt
+mount -o subvol=@home --mkdir /dev/nvme0n1 /mnt/home
 
 # list subvolumes
 btrfs subvolumes list -t /mnt
-
-```
-
-## Setup Raid 0 with mdadm
-
-- Follow this [guide](https://wiki.archlinux.org/title/RAID)
-- Follow this [Raid Array](https://www.jeffgeerling.com/blog/2021/htgwa-create-raid-array-linux-mdadm)
-
-```bash
-pacman -S mdadm
-mdadm --misc /dev/nvme0n1
-mdadm --misc /dev/nvme1n1
-mdadm --create --verbose --level=0 --raid-devices=2 /dev/md0 /dev/nvme0n1 /dev/nvme1n1
-mdadm --detail --scan >> /etc/mdadm.conf
-# append to this file
-# ARRAY /dev/md/<NAME>:0 metadata=1.2 UUID=<UUID>
-mkfs.ext4 /dev/md0
-```
-
-## Setup LVM
-
-- Follow this [guide](https://wiki.archlinux.org/title/LVM)
-- PV (Physical Volume) = Hardware
-- VG (Volume Group) = Bridge
-- LV (Logical Volume) = Software
-
-```mermaid
-graph TB
-subgraph "Logical Volume Layer"
-LV1[ROOTFS<br/>2TB]
-end
-
-subgraph "Volume Group Layer"
-VG1[VG_RAID0<br/>2TB Total<br/>Available: 2TB]
-end
-
-subgraph "Physical Volume Layer"
-PV1[PV1<br/>/dev/md0<br/>2TB]
-end
-
-subgraph "Physical Storage Layer"
-M_RAID0["MDADM (RAID 0)"<br/>/dev/md0<br/>2TB]
-end
-
-%% Connections between layers
-LV1 --> VG1
-VG1 --> PV1
-PV1 --> M_RAID0
-
-%% Styling
-classDef lvLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-classDef vgLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
-classDef pvLayer fill:#fce4ec,stroke:#880e4f,stroke-width:2px
-classDef diskLayer fill:#f5f5f5,stroke:#424242,stroke-width:2px
-
-class LV1,LV2,LV3 lvLayer
-class VG1 vgLayer
-class PV1,PV2 pvLayer
-class M_RAID0 diskLayer
-```
-
-```bash
-pacman -S lvm2
-pvcreate /dev/md0
-vgcreate vgraid0 /dev/md0
-lvcreate -l 100%FREE -n rootfs /dev/vgraid0
 ```
 
 ## Create partitions
@@ -185,18 +119,6 @@ passwd kk
 kk ALL=(ALL:ALL) NOPASSWD: ALL
 ```
 
-## Set Initial Ram Disk
-
-```bash
-pacman -S mdadm lvm2
-
-# open /etc/mkinitcpio.conf
-# add mdadm_udev and lvm2 to HOOKS
-HOOKS=(... block mdadm_udev lvm2 filesystems ...)
-# run generate initramfs
-mkinitcpio -P
-```
-
 ## Install Pipewire (Sound)
 
 ```bash
@@ -235,7 +157,9 @@ grub-mkconfig -o /boot/grub/grub.cfg
 ## Install required tools
 
 ```bash
-pacman -S man xclip tmux neovim tree ripgrep eza bat zoxide
+pacman -S fish git sudo openssh
+pacman -S man xclip tmux neovim tree htop
+pacman -S ripgrep eza bat zoxide
 pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
@@ -249,10 +173,15 @@ yarn global add npm
 ## Install default software
 
 ```bash
+yay -S ghostty
 yay -S visual-studio-code-bin obsidian
 yay -S vesktop-bin postman-bin
 yay -S claude-code claude-desktop-bin
 yay -S feishin-bin rssguard
+yay -S waterfox-bin brave-bin
+yay -S 1password
+
+# optional
 yay -S firefox google-chrome
 
 # tor onion
@@ -295,6 +224,7 @@ systemctl enable NetworkManager
 
 ```bash
 pacman -S plasma-desktop kde-applications sddm
+pacman -S spectacle
 systemctl enable sddm
 ```
 
@@ -313,6 +243,9 @@ systemctl enable podman.service
 
 mkdir -p ~/.config/containers/systemd/
 systemctl --user daemon-reload
+
+# always run unless no login
+loginctl enable-linger $USER
 ```
 
 ## UFW
@@ -340,7 +273,9 @@ sudo chmod 0600 /dev/hidraw*
 
 ```bash
 yay -S uefitool-bin linux-headers
-yay -S vmware-workstation vmware-keymaps
+yay -S vmware-workstation
+# install after workstation
+yay -S vmware-keymaps
 
 # disable secure boot
 sudo modprobe -a vmw_vmci vmmon
@@ -349,10 +284,10 @@ sudo modprobe -a vmw_vmci vmmon
 systemctl enable vmware-networks.service
 ```
 
-## Install Anaconda
+## Install LLM
 
 ```bash
-yay -S anaconda
+yay -S cuda anaconda llama.cpp
 ```
 
 ## Install Dig
@@ -361,4 +296,31 @@ yay -S anaconda
 
 ```bash
 yay -S bind
+```
+
+## Install Tmux Plugin
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+## Install fisher
+
+```bash
+curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+
+fisher update
+nvm install latest
+```
+
+## Install gup
+
+```bash
+go install github.com/nao1215/gup@latest
+```
+
+## KDE Uninstall
+
+```bash
+yay -Rns dragon akregator kate kiten alligator
 ```
