@@ -24,5 +24,8 @@ sudo pacman-key --lsign-key F9A6E68A711354D84A9B91637533BAFE69A25079
 Server = $mirror
 
 sudo pacman -Syu
+sudo pacman -S blackman
+
+# optional
 sudo pacman -S blackarch
 ```
