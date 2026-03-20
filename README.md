@@ -169,6 +169,9 @@ pacman -S unrar unzip
 pacman -S rsync
 pacman -S nix
 
+# custom archlinux iso
+pacman -S archiso
+
 yarn global add npm
 ```
 
