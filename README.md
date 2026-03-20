@@ -276,6 +276,12 @@ sudo chmod a+rw /dev/hidraw*
 sudo chmod 0600 /dev/hidraw*
 ```
 
+## Install Virtualbox
+
+```bash
+yay -S virtualbox virtualbox-host-modules-arch
+```
+
 ## Install VMWare
 
 ```bash
