@@ -160,12 +160,14 @@ grub-mkconfig -o /boot/grub/grub.cfg
 pacman -S fish git sudo openssh
 pacman -S man xclip tmux neovim tree htop
 pacman -S ripgrep eza bat zoxide
+pacman -S btrfs-progs
 pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
 pacman -S torsocks ufw
 pacman -S unrar unzip
 pacman -S rsync
+pacman -S nix
 
 yarn global add npm
 ```
@@ -177,12 +179,13 @@ yay -S ghostty
 yay -S visual-studio-code-bin obsidian
 yay -S vesktop-bin postman-bin
 yay -S claude-code claude-desktop-bin
-yay -S feishin-bin rssguard
-yay -S waterfox-bin brave-bin
+yay -S feishin-bin
+yay -S librewolf-bin brave-bin
 yay -S 1password
+yay -S cloudflared
 
 # optional
-yay -S firefox google-chrome
+yay -S firefox google-chrome waterfox-bin
 
 # tor onion
 gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org
@@ -223,8 +226,12 @@ systemctl enable NetworkManager
 - [KDE](https://wiki.archlinux.org/title/KDE)
 
 ```bash
-pacman -S plasma-desktop kde-applications sddm
-pacman -S spectacle
+pacman -S plasma-desktop sddm
+pacman -S dolphin spectacle kscreen ktorrent kwalletmanager
+pacman -S gwenview ark
+
+# optional
+pacman -S kde-applications
 systemctl enable sddm
 ```
 
@@ -269,7 +276,7 @@ sudo chmod a+rw /dev/hidraw*
 sudo chmod 0600 /dev/hidraw*
 ```
 
-## VMWare
+## Install VMWare
 
 ```bash
 yay -S uefitool-bin linux-headers
@@ -304,7 +311,7 @@ yay -S bind
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-## Install fisher
+## Install Fisher
 
 ```bash
 curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
@@ -313,14 +320,18 @@ fisher update
 nvm install latest
 ```
 
-## Install gup
+## Install Gup for golang
 
 ```bash
 go install github.com/nao1215/gup@latest
 ```
 
-## KDE Uninstall
+## Install Steam
 
 ```bash
-yay -Rns dragon akregator kate kiten alligator
+# Uncomment /etc/pacman.conf
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+
+yay -S steam
 ```
