@@ -168,6 +168,10 @@ pacman -S torsocks ufw
 pacman -S unrar unzip
 pacman -S rsync
 pacman -S nix
+pacman -S yq
+
+# require for neovim treesitter plugin
+pacman -S tree-sitter-cli
 
 # custom archlinux iso
 pacman -S archiso
@@ -186,6 +190,7 @@ yay -S feishin-bin
 yay -S librewolf-bin brave-bin
 yay -S 1password
 yay -S cloudflared
+yay -S vlc
 
 # optional
 yay -S firefox google-chrome waterfox-bin
@@ -232,6 +237,9 @@ systemctl enable NetworkManager
 pacman -S plasma-desktop sddm
 pacman -S dolphin spectacle kscreen ktorrent kwalletmanager
 pacman -S gwenview ark
+
+# thumnailers
+pacman -S ffmpegthumbs kdegraphics-thumbnailers
 
 # optional
 pacman -S kde-applications
