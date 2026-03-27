@@ -164,11 +164,14 @@ pacman -S btrfs-progs
 pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
-pacman -S torsocks ufw
+pacman -S torsocks ufw tcpdump
 pacman -S unrar unzip
-pacman -S rsync
-pacman -S nix
-pacman -S yq
+pacman -S rsync rclone
+pacman -S nix yq
+pacman -S yt-dlp
+
+# wireshark
+pacman -S wireshark-qt
 
 # require for neovim treesitter plugin
 pacman -S tree-sitter-cli
@@ -188,7 +191,7 @@ yay -S vesktop-bin postman-bin
 yay -S claude-code claude-desktop-bin
 yay -S feishin-bin
 yay -S librewolf-bin brave-bin
-yay -S 1password
+yay -S 1password bitwarden
 yay -S cloudflared
 yay -S vlc
 
@@ -236,7 +239,7 @@ systemctl enable NetworkManager
 ```bash
 pacman -S plasma-desktop sddm
 pacman -S dolphin spectacle kscreen ktorrent kwalletmanager
-pacman -S gwenview ark
+pacman -S gwenview ark kmix
 
 # thumnailers
 pacman -S ffmpegthumbs kdegraphics-thumbnailers
@@ -269,12 +272,14 @@ loginctl enable-linger $USER
 ## UFW
 
 ```bash
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw enable
-sudo ufw status verbose
+systemctl enable ufw.service
 
-sudo ufw allow ssh
+ufw default deny incoming
+ufw default allow outgoing
+ufw enable
+ufw status verbose
+
+ufw allow ssh
 ```
 
 ## Hidraw

@@ -29,3 +29,21 @@ sudo pacman -S blackman
 # optional
 sudo pacman -S blackarch
 ```
+
+## Tools
+
+```sh
+# Web
+pacman -S seclists
+pacman -S hydra gobuster
+
+# Network
+pacman -S wireshark-qt
+pacman -S tcpdump
+
+# RDP Remote
+pacman -S remmina
+
+# Reverse Engineer
+pacman -S ghidra
+```
