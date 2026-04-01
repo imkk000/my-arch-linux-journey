@@ -164,7 +164,7 @@ pacman -S btrfs-progs
 pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
-pacman -S torsocks ufw tcpdump
+pacman -S torsocks ufw tcpdump mkcert
 pacman -S unrar unzip
 pacman -S rsync rclone
 pacman -S nix yq
@@ -356,4 +356,37 @@ go install github.com/nao1215/gup@latest
 Include = /etc/pacman.d/mirrorlist
 
 yay -S steam
+```
+
+## SSH disable root
+
+Edit file `/etc/ssh/sshd_config`
+
+```conf
+ListenAddress 127.0.0.1
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+PrintMotd no
+X11Forwarding no
+```
+
+## Nix OS
+
+```bash
+systemctl enable nix-daemon
+
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+nix-channel --update
+nix-channel --list
+
+nix-shell
+
+# install nix-index
+nix-env -iA nixpkgs.nix-index
+# uninstall
+nix-env -e nix-index
+
+nix-index
+nix-locate libxxx.so.1
 ```

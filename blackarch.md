@@ -33,17 +33,26 @@ sudo pacman -S blackarch
 ## Tools
 
 ```sh
-# Web
-pacman -S seclists
-pacman -S hydra gobuster
-
 # Network
-pacman -S wireshark-qt
+pacman -S wireshark-qt wireshark-cli
 pacman -S tcpdump
+pacman -S inetutils
+pacman -S traceroute
+pacman -S whois
 
-# RDP Remote
+# Remote
 pacman -S remmina
+pacman -S smbclient
 
 # Reverse Engineer
 pacman -S ghidra
+
+# Programming
+pacman -S go
+
+# Brute Force
+pacman -S john
+pacman -S seclists
+pacman -S hydra gobuster
+blackman -s netexec
 ```
