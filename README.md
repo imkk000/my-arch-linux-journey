@@ -115,8 +115,16 @@ passwd root
 useradd -mU kk -s /usr/bin/fish
 passwd kk
 
-# visudo NOPASSWD (TOO Risky, But Lazy)
-kk ALL=(ALL:ALL) NOPASSWD: ALL
+kk ALL=(ALL:ALL) ALL: ALL
+
+# hardening user (only root and my user)
+sudo passwd -l root
+grep -v '/nologin\|/false' /etc/passwd
+sudo cat /etc/sudoers
+
+# find SUID perm
+find / -perm -4000 2>/dev/null
+find / -perm -o+w 2>/dev/null
 ```
 
 ## Install Pipewire (Sound)
@@ -169,6 +177,14 @@ pacman -S unrar unzip
 pacman -S rsync rclone
 pacman -S nix yq
 pacman -S yt-dlp
+pacman -S yubikey-manager
+pacman -S dbeaver
+
+# install emulator (full manual management - no vir-manager)
+pacman -S qemu-full
+
+# security enhancement
+pacman -S nftables yara lynis
 
 # wireshark
 pacman -S wireshark-qt
@@ -239,7 +255,7 @@ systemctl enable NetworkManager
 ```bash
 pacman -S plasma-desktop sddm
 pacman -S dolphin spectacle kscreen ktorrent kwalletmanager
-pacman -S gwenview ark kmix
+pacman -S gwenview ark kmix okular
 
 # thumnailers
 pacman -S ffmpegthumbs kdegraphics-thumbnailers
@@ -267,19 +283,6 @@ systemctl --user daemon-reload
 
 # always run unless no login
 loginctl enable-linger $USER
-```
-
-## UFW
-
-```bash
-systemctl enable ufw.service
-
-ufw default deny incoming
-ufw default allow outgoing
-ufw enable
-ufw status verbose
-
-ufw allow ssh
 ```
 
 ## Hidraw
@@ -316,7 +319,7 @@ systemctl enable vmware-networks.service
 ## Install LLM
 
 ```bash
-yay -S cuda anaconda llama.cpp
+yay -S cuda llama.cpp
 ```
 
 ## Install Dig

@@ -33,6 +33,12 @@ sudo pacman -S blackarch
 ## Tools
 
 ```sh
+# Editor
+pacman -S code
+
+# Fake Service
+yay -S responder
+
 # Network
 pacman -S wireshark-qt wireshark-cli
 pacman -S tcpdump
@@ -43,6 +49,7 @@ pacman -S whois
 # Remote
 pacman -S remmina
 pacman -S smbclient
+pacman -S postman
 
 # Reverse Engineer
 pacman -S ghidra
@@ -51,8 +58,16 @@ pacman -S ghidra
 pacman -S go
 
 # Brute Force
+pacman -S hashcat
 pacman -S john
 pacman -S seclists
 pacman -S hydra gobuster
 blackman -s netexec
+
+# https://gitlab.com/kalilinux/packages/hash-identifier/
+# install at /opt/hash-identifier
+kali(hash-identifier): hash-id.py
+
+# Miscellaneous
+pacman -S zip
 ```
