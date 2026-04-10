@@ -39,23 +39,31 @@ pacman -S code
 # Fake Service
 yay -S responder
 
+# cannot noconfirm
+pacman -S wireshark-qt
+
 # Network
-pacman -S wireshark-qt wireshark-cli
+pacman -S wireshark-cli # tshark
 pacman -S tcpdump
-pacman -S inetutils
-pacman -S traceroute
-pacman -S whois
+pacman -S nmap
+pacman -S inetutils # telnet
+pacman -S libparistraceroute
+pacman -S whois bind
+pacman -S openbsd-netcat
 
 # Remote
+pacman -S openssh
 pacman -S remmina
+pacman -S dbeaver
 pacman -S smbclient
-pacman -S postman
+yay -S postman-bin
 
 # Reverse Engineer
 pacman -S ghidra
 
 # Programming
 pacman -S go
+pacman -S python python-pip
 
 # Brute Force
 pacman -S hashcat
@@ -69,5 +77,7 @@ blackman -s netexec
 kali(hash-identifier): hash-id.py
 
 # Miscellaneous
-pacman -S zip
+pacman -S git tree sudo
+pacman -S zip unzip unrar
+pacman -S man neovim ripgrep
 ```

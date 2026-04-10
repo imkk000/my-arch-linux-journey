@@ -168,11 +168,11 @@ grub-mkconfig -o /boot/grub/grub.cfg
 pacman -S fish git sudo openssh
 pacman -S man xclip tmux neovim tree htop
 pacman -S ripgrep eza bat zoxide
-pacman -S btrfs-progs
+pacman -S btrfs-progs snapper snap-pac
 pacman -S go
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
-pacman -S torsocks ufw tcpdump mkcert
+pacman -S torsocks tcpdump mkcert
 pacman -S unrar unzip
 pacman -S rsync rclone
 pacman -S nix yq

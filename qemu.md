@@ -47,7 +47,7 @@ EOF
 qemu-system-x86_64 -m 4096 -smp 4 -nic bridge -cdrom <iso> -display gtk
 
 # use default nat
-qemu-system-x86_64 -no-defaults -no-user-config -no-hpet -display gtk -cpu host -m 4096 -smp 4 \
+qemu-system-x86_64 -no-defaults -no-user-config -display gtk -cpu host -m 4096 -smp 4 \
     -netdev user,id=net0,restrict=on -device virtio-net,netdev=net0 \
     -drive file=vm.qcow2,format=qcow2,if=virtio \
     -cdrom <iso>
@@ -81,16 +81,18 @@ qemu-system-x86_64 \
   -nodefaults \
   -no-user-config \
   \
-  # --- Disable unused devices ---
-  -no-hpet \
-  \
   # --- QMP socket ---
   -qmp unix:/tmp/qmp-vm.sock,server,nowait \
   \
   # --- Seccomp ---
   -sandbox on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny \
+  \
   # --- Monitor ---
   -monitor vc
+  \
+  # --- Mount Host to VM ---
+  -virtfs local,path=/host/dir,mount_tag=hostshare,security_model=passthrough
+  # inside: mount -t 9p -o trans=virtio hostshare /mnt/host
 ```
 
 ## Snapshot Disk (qcow2)
@@ -98,8 +100,16 @@ qemu-system-x86_64 \
 - must stop vm before snapshot
 
 ```bash
-# clone disk
+# increase raw image size
+truncate -s size tails.img
+
+qemu-img create -f qcow2 disk.qcow2 8G
+
+# clone disk (-b linked)
 qemu-img create -f qcow2 -F qcow2 -b disk.qcow2 clone.qcow2
+
+# clone from specific snapshot (-l)
+qemu-img convert -f qcow2 -O qcow2 -l updated base.qcow2 clone.qcow2
 
 # create
 qemu-img snapshot -c name disk.qcow2
@@ -114,5 +124,12 @@ qemu-img snapshot -a name disk.qcow2
 qemu-img snapshot -d name disk.qcow2
 
 # convert vmware disk into qcow2
-qemu-img convert -f vmdk -O qcow2 vmware.vmdk disk.qcow3
+qemu-img convert -f vmdk -O qcow2 vmware.vmdk disk.qcow2
+
+# resize disk
+qemu-img resize disk.qcow2 +10G
+qemu-img resize disk.qcow2 -10G
+
+# fixed size
+qemu-img resize disk.qcow2 50G
 ```
