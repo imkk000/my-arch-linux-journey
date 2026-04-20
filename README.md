@@ -184,7 +184,7 @@ pacman -S dbeaver
 pacman -S qemu-full
 
 # security enhancement
-pacman -S nftables yara lynis
+pacman -S nftables yara lynis conntrack-tools
 
 # wireshark
 pacman -S wireshark-qt
@@ -255,7 +255,7 @@ systemctl enable NetworkManager
 ```bash
 pacman -S plasma-desktop sddm
 pacman -S dolphin spectacle kscreen ktorrent kwalletmanager
-pacman -S gwenview ark kmix okular
+pacman -S gwenview ark kmix okular mpv
 
 # thumnailers
 pacman -S ffmpegthumbs kdegraphics-thumbnailers
@@ -392,4 +392,12 @@ nix-env -e nix-index
 
 nix-index
 nix-locate libxxx.so.1
+```
+
+## Tailscale
+
+```bash
+yay -S tailscale
+
+systemctl enable --now tailscaled.service
 ```
