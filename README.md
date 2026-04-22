@@ -165,7 +165,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 ## Install required tools
 
 ```bash
-pacman -S fish git sudo openssh
+pacman -S fish sudo openssh
+pacman -S git git-crypt
 pacman -S man xclip tmux neovim tree htop
 pacman -S ripgrep eza bat zoxide
 pacman -S btrfs-progs snapper snap-pac

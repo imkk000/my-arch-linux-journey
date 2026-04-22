@@ -70,6 +70,7 @@ pacman -S hashcat
 pacman -S john
 pacman -S seclists
 pacman -S hydra gobuster
+pacman -S sqlmap
 blackman -s netexec
 
 # https://gitlab.com/kalilinux/packages/hash-identifier/
