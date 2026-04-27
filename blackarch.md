@@ -50,6 +50,7 @@ pacman -S inetutils # telnet
 pacman -S libparistraceroute
 pacman -S whois bind
 pacman -S openbsd-netcat
+pacman -S burpsuite
 
 # Remote
 pacman -S openssh
@@ -60,6 +61,7 @@ yay -S postman-bin
 
 # Reverse Engineer
 pacman -S ghidra
+pacman -S python-frida
 
 # Programming
 pacman -S go
