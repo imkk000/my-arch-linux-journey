@@ -180,12 +180,16 @@ pacman -S nix yq
 pacman -S yt-dlp
 pacman -S yubikey-manager
 pacman -S dbeaver
+pacman -S woff2
+pacman -S pinentry
 
 # install emulator (full manual management - no vir-manager)
 pacman -S qemu-full
+pacman -S nvidia-container-toolkit
 
 # security enhancement
 pacman -S nftables yara lynis conntrack-tools
+pacman -S perl-image-exiftool
 
 # wireshark
 pacman -S wireshark-qt
@@ -194,7 +198,7 @@ pacman -S wireshark-qt
 pacman -S tree-sitter-cli
 
 # custom archlinux iso
-pacman -S archiso
+pacman -S archiso exfatprogs
 
 yarn global add npm
 ```
