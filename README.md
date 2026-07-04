@@ -171,6 +171,11 @@ pacman -S man xclip tmux neovim tree htop
 pacman -S ripgrep eza bat zoxide
 pacman -S btrfs-progs snapper snap-pac
 pacman -S go
+pacman -S rust cbindgen lld
+pacman -S dotnet-sdk
+pacman -S nasm yasm
+pacman -S wasi-compiler-rt wasi-libc++ wasi-libc++abi
+pacman -S python-black
 pacman -S otf-monaspace
 pacman -S diff-so-fancy luarocks yarn
 pacman -S torsocks tcpdump mkcert
@@ -182,6 +187,9 @@ pacman -S yubikey-manager
 pacman -S dbeaver
 pacman -S woff2
 pacman -S pinentry
+pacman -S fd
+pacman -S upx
+pacman -S glow hurl whois inetutils
 
 # install emulator (full manual management - no vir-manager)
 pacman -S qemu-full
@@ -190,9 +198,13 @@ pacman -S nvidia-container-toolkit
 # security enhancement
 pacman -S nftables yara lynis conntrack-tools
 pacman -S perl-image-exiftool
+pacman -S proxychains-ng
 
 # wireshark
 pacman -S wireshark-qt
+
+# reverse engineering
+pacman -S ghidra jadx innoextract android-tools
 
 # require for neovim treesitter plugin
 pacman -S tree-sitter-cli
@@ -208,22 +220,32 @@ yarn global add npm
 ```bash
 yay -S ghostty
 yay -S visual-studio-code-bin obsidian
-yay -S vesktop-bin postman-bin
+yay -S vesktop-bin bruno-bin
 yay -S claude-code claude-desktop-bin
-yay -S feishin-bin
-yay -S librewolf-bin brave-bin
+yay -S feishin-bin spotify
+yay -S librewolf-bin brave-bin ungoogled-chromium-bin mini-browser
 yay -S 1password bitwarden
 yay -S cloudflared
 yay -S vlc
 
+# database tools
+yay -S mongodb-compass-bin mongosh-bin
+
+# reverse engineering
+yay -S ghidra-mcp
+
+# multiboot usb
+yay -S ventoy-bin
+
 # optional
-yay -S firefox google-chrome waterfox-bin
+yay -S firefox google-chrome waterfox-bin postman-bin
 
 # tor onion
 gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org
 yay -S tor-browser-bin
 
-yay -S ollama
+# ollama-cuda for nvidia gpu
+yay -S ollama ollama-cuda
 systemctl enable ollama
 ```
 
